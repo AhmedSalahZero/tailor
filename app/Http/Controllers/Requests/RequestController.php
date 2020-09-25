@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Requests;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDataRequest;
+use App\Models\ProductVariation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -64,4 +65,5 @@ class RequestController extends Controller
         return view('ask.myRequests')->with('requests' , \App\Models\Request::all());
 
     }
+
 }

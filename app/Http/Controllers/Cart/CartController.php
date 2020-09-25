@@ -63,7 +63,9 @@ $sub = [] ;
 
         $cart->sync();
         $cart->add($request);
-
+        return response()->json([
+            'count_num'=>count(Request()->user()->cart)
+        ]);
 
     }
 
@@ -76,12 +78,29 @@ $sub = [] ;
     }
     public function destroy($ProductVariation)
     {
+
         $cart = new Cart(Auth()->user());
 
         $cart->delete($ProductVariation);
+        $total = 0 ;
+        foreach (Request()->user()->cart as $pro)
+        {
+
+            $total += $pro->pivot->quantity * $pro->price->Amount() ;
+        }
+        $totalWithShipping = (new Money($total +Request()->user()->shippingMethod->price->amount()))->formatted()  ;
+
+        $total = (new Money($total))->formatted();
+        $count_num = count(Request()->user()->cart);
+
+
+
         return response()->json([
             'status'=>true ,
-            'id'=>$ProductVariation
+            'id'=>$ProductVariation ,
+            'Total'=>$total ,
+            'totalWithShipping'=>$totalWithShipping,
+            'count_num'=>$count_num
         ]);
 
     }

@@ -89,6 +89,25 @@ class ProductController extends Controller
          $cartController = new CartController();
          return $cartController->store($newdata , new Cart(Auth()->user()));
     }
+    public function getProductVariationPrice(Request $request)
+    {
+        $price = ProductVariation::where('id',$request->productVariationId)->first()->price->formatted();
+       return response()->json([
+           'price'=>$price,
+           'count_num'=>count(Request()->user()->cart)
+       ]);
+
+    }
+    public function getCartNum()
+    {
+        $cartCount = count(Request()->user()->cart) ;
+        return response()->json([
+            'count_num'=>$cartCount
+        ]);
+
+
+    }
+
     public function rules()
     {
         return [
@@ -104,6 +123,8 @@ class ProductController extends Controller
             'color.required'=>'please choose the color'
         ];
     }
+
+
 
 
 

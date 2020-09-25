@@ -72,7 +72,7 @@
                             <i class="fa fa-star"></i>
                             <span>( 138 reviews )</span>
                         </div>
-                        <div class="product__details__price">{{$product->formattedPrice}} <span></span></div>
+                        <div id="post_price" class="product__details__price">{{$product->formattedPrice}} <span></span></div>
                         <p>{{$product->small_description}}</p>
                         <div class="product__details__button">
                             <div class="quantity">
@@ -80,14 +80,14 @@
                                 <div class="pro-qty">
                                     <form action=""  method="POST">
                                         @csrf
-                                    <input type="text" value="1" name="quantity">
+                                        <input type="text" value="1" name="quantity">
 
 
                                 </div>
                             </div >
                             @if($product->inStock())
-                            <button href=""  class="cart-btn" id="submitData"><span class="icon_bag_alt"></span> Add to cart</button>
-@endif
+                                <button href=""  class="cart-btn" id="submitData"><span class="icon_bag_alt"></span> Add to cart</button>
+                            @endif
                         </div>
 
                         <div class="product__details__widget">
@@ -95,36 +95,36 @@
                                 <li>
                                     <input type="hidden" value="{{$product->id}}" name="product_id">
                                     <span>Availability:</span>
-                                        @if($product->inStock())
-                                            <div class="stock__checkbox">
-                                                <label for="stockin">
-                                                    In Stock
-                                                    <input type="checkbox" id="stockin" checked disabled>
-                                                    <span class="checkmark"></span>
-                                                </label>
-                                            </div>
+                                    @if($product->inStock())
+                                        <div class="stock__checkbox">
+                                            <label for="stockin">
+                                                In Stock
+                                                <input type="checkbox" id="stockin" checked disabled>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
                                         <span>Available color:</span>
-                                            @foreach($product->colors as $color)
+                                        @foreach($product->colors as $color)
                                             <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" id="{{$color->name}}" name="color" class="custom-control-input" value="{{$color->name}}">
-                                                    <label class="custom-control-label" for="{{$color->name}}">{{$color->name}}</label>
+                                                <input type="radio" id="{{$color->name}}" name="color" class="custom-control-input" value="{{$color->name}}">
+                                                <label class="custom-control-label" for="{{$color->name}}">{{$color->name}}</label>
                                             </div>
-                                            @endforeach
+                                        @endforeach
 
 
                                 </li>
                                 <li>
                                     <span>Available size:</span>
-                                        @else
-                                            <div class="stock__checkbox">
-                                                <label for="stockout">
-                                                    out of stock
-                                                    <input type="checkbox" id="stockout" disabled >
-                                                    <span class="checkmark"></span>
-                                                </label>
-                                            </div>
+                                    @else
+                                        <div class="stock__checkbox">
+                                            <label for="stockout">
+                                                out of stock
+                                                <input type="checkbox" id="stockout" disabled >
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
 
-                                            @endif
+                                    @endif
 
                                 </li>
                                 <li>
@@ -134,16 +134,16 @@
                                     @endif
 
 
-                                        @foreach($product->variations as $type)
+                                    @foreach($product->variations as $type)
 
                                         @if($type->inStock() )
 
-                                                <div class="custom-control custom-radio custom-control-inline">
-                                                    <input type="radio" id="{{$type->name}}" name="size" class="custom-control-input" value="{{$type->name}}">
-                                                    <label class="custom-control-label" for="{{$type->name}}">{{$type->name}}</label>
-                                                </div>
+                                            <div class="custom-control custom-radio custom-control-inline">
+                                                <input type="radio" csq="{{$type->id}}" id="{{$type->name}}" name="size" class="custom-control-input xzzz" value="{{$type->name}}">
+                                                <label id="{{$type->id}}" class="custom-control-label xqqq" xq="{{$type->id}}" for="{{$type->name}}">{{$type->name}}</label>
+                                            </div>
                                         @endif
-                                        @endforeach
+                                    @endforeach
 
 
                                 </li>
@@ -165,7 +165,7 @@
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
                                 <h6>Description</h6>
-                                 <p>{{$product->description}}</p>
+                                <p>{{$product->description}}</p>
 
                             </div>
                             <div class="tab-pane" id="tabs-2" role="tabpanel">
@@ -223,7 +223,7 @@
                     </div>
 
 
-                    @endforeach
+                @endforeach
             </div>
         </div>
 
@@ -256,9 +256,9 @@
 
 @section('style')
 
-<style>
-    button{cursor: pointer;}
-</style>
+    <style>
+        button{cursor: pointer;}
+    </style>
     <link rel="stylesheet" href="{{asset('new/css/style.css')}}" type="text/css">
 
 
@@ -287,28 +287,45 @@
                     'product_id':$("input[name='product_id']").val()
                 },
                 success: function (data) {
-                    console.log('response', data);
+                    document.getElementById('gettt').innerHTML=data.count_num
                     $(".alert-success").css("display", "block");
                     $(".alert-success").append("<div>item has been inserted successfully");
                 }, error: function (reject) {
-
-
                 }
             });
         });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('.xqqq').on('click',function(event){
+                // very important
+
+                var productVariationId = event.target.id ;
+
+                $.ajax({
+                    type: 'post',
+                    url: "{{route('getVarPrice')}}",
+                    data: {
+                        '_token':"{{csrf_token()}}",
+                        'productVariationId':productVariationId
+                    },
+                    success: function (data) {
+                        document.getElementById('post_price').innerHTML = data.price
 
 
+                    }, error: function (reject) {
+                    }
+                });
 
 
-
+            })
+        });
 
     </script>
-<script>
 
 
-
-
-</script>
+    <script>
+    </script>
 
 
     <script src="{{asset('new/js/jquery-3.3.1.min.js')}}"></script>

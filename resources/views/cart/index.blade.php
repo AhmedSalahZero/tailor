@@ -86,11 +86,12 @@
 
                                     <td class="xui">
 
-                                        <button type="button" pro_id="{{$pro->id}}"  class=" btn btn-rounded btn-danger delete_cart">remove</button>
+                                        <button  type="button" pro_id="{{$pro->id}}"  class=" btn btn-rounded btn-danger delete_cart">remove</button>
                                     </td>
                             </tr>
 @endforeach
                               @endif
+
 
                             @if($user->cart->count() == 0)
                                 <div class="alert alert-success text-center ">
@@ -112,7 +113,7 @@
 
                 @if(  $user->cart->count() > 0)
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                    <div class="cart__btn update__btn">
+                    <div class="cart__btn update__btn" id="empty_cart_id">
                         <a href="{{Route('cart.deleteAll')}}"><span class="icon_loading"></span> Empty cart</a>
                     </div>
                 </div>
@@ -126,14 +127,14 @@
                 <div class="col-lg-6">
 
                 </div>
-                <div class="col-lg-4 offset-lg-2">
+                <div class="col-lg-4 offset-lg-2" id="cart_details_price">
                     <div class="cart__total__procced">
                         <h6>Cart total</h6>
                         <ul>
-                            <li>Subtotal <span> {{$total}}</span></li>
+                            <li>Subtotal <span id="sub_total"> {{$total}}</span></li>
                             <li>shippingMethod <span> {{Auth()->user()->shippingMethod->name}}</span></li>
-                            <li>ShippingPrice <span> {{Auth()->user()->shippingMethod->price->formatted()}}</span></li>
-                            <li>Total <span>{{$totalWithShipping}}</span></li>
+                            <li>ShippingPrice <span > {{Auth()->user()->shippingMethod->price->formatted()}}</span></li>
+                            <li>Total <span id="sub_totalWithShipping">{{$totalWithShipping}}</span></li>
                         </ul>
                         <a href="{{Route('check.out')}}" class="primary-btn">Proceed to checkout</a>
 
@@ -188,13 +189,25 @@
                 },
                 success: function (data) {
                     $('.itemNo'+data.id).remove();
-                    console.log('response', data);
-                    $(".alert-success").css("display", "block");
-                    $(".alert-success").append("<P>item has been Updated successfully");
+                    document.getElementById('sub_totalWithShipping').innerHTML =data.totalWithShipping ;
+                    document.getElementById('sub_total').innerHTML = data.Total ;
+                    document.getElementById('gettt').innerHTML=data.count_num
+                        $(".alert-success").css("display", "block");
+                    if(data.Total == "$0.00")
+                    {
+                        $('#cart_details_price').remove();
+                        $('#empty_cart_id').remove();
+
+
+
+
+
+                    }
+                    $(".alert-success").append("<P>item has been Deleted successfully");
                 }, error: function (data) {
                     console.log('response', data);
                     $(".alert-success").css("display", "block");
-                    $(".alert-success").append("<P> Error happened while updating the quantity ");
+                    $(".alert-success").append("<P> Error happened while Deleted the quantity ");
 
                 }
             });
@@ -204,7 +217,7 @@
 
 
 
-    <script>
+  <script>
 
         $(document).on('click', '.update_cart', function (e) {
             e.preventDefault();

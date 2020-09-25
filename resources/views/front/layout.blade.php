@@ -69,7 +69,7 @@
                 <div class="cart d-flex flex-row align-items-center justify-content-start">
                     <div class="cart_icon"><a href="{{Route('cart.index')}}">
                             <img src="{{asset('images/bag.png')}}" alt="">
-                            <div class="cart_num">{{(Auth()->user()->cart->count())}}</div>
+                            <div class="cart_num" id="cart_num_update">{{(Auth()->user()->cart->count())}}</div>
                         </a></div>
                 </div>
 
@@ -147,7 +147,7 @@
                         <ul>
                             <li><a href="{{Route('edit.account')}}">
                                     <div class="language_flag"></div>
-                                    <div class="dropdown_text">Edit</div>
+                                    <div id="xqwe" class="dropdown_text">Edit</div>
                                 </a></li>
                             <li><a href="{{route('user.orders')}}">
                                     <div class="language_flag"></div>
@@ -219,7 +219,7 @@
             <div class="cart d-flex flex-row align-items-center justify-content-start">
                 <div class="cart_icon"><a href="{{Route('cart.index')}}">
                         <img src="{{asset('images/bag.png')}}" alt="">
-                        <div class="cart_num">{{Auth()->user()->cart->count()}}</div>
+                        <div class="cart_num" id="gettt">{{Auth()->user()->cart->count()}}</div>
                     </a>  </div>
                 <div class="cart_text">Cart</div>
 

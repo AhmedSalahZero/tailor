@@ -50,3 +50,5 @@ Route::get('cart/checkout/payment' , 'Cart\CartController@checkoutView')->middle
 Route::resource('orders' ,'Orders\OrderController');
 Route::get('myOrders' ,'Orders\OrderController@show')->middleware('auth')->name('user.orders');
 Route::get('myRequests','Requests\RequestController@myRequests')->middleware('auth')->name('my.requests');
+Route::post('products/getVariationPrice','Products\ProductController@getProductVariationPrice')->name('getVarPrice');
+Route::post('product/get_cart_num','Products\ProductController@getCartNum')->name('getNumCart');
